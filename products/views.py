@@ -29,6 +29,10 @@ def show_katalog(request):
         publisher = form.cleaned_data.get("publisher")
         published_year = form.cleaned_data.get("published_year")
 
+        print(author_name)
+        print(publisher)
+        print(published_year)
+
         if author_name:
             books = books.filter(BookAuthor__icontains=author_name)
 
@@ -88,6 +92,7 @@ def get_book_by_id(request, id):
     data = Katalog.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+
 @csrf_exempt
 def create_book_flutter(request):
     if request.method == 'POST':
@@ -107,7 +112,7 @@ def create_book_flutter(request):
                 BookAuthor=author,
                 Year_Of_Publication=year,
                 Publisher=publisher,
-                Image=image_url 
+                Image=image_url
             )
 
             new_book.save()
@@ -119,6 +124,7 @@ def create_book_flutter(request):
 
     else:
         return JsonResponse({"status": "error", "message": "Invalid request"}, status=400)
+
 
 @csrf_exempt
 def filter_books(request):
@@ -136,6 +142,7 @@ def filter_books(request):
 
     books_json = serializers.serialize('json', books)
     return JsonResponse(books_json, safe=False)
+
 
 @csrf_exempt
 def add_to_cart_flutter(request, book_id, user_id):
