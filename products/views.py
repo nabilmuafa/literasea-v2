@@ -29,10 +29,6 @@ def show_katalog(request):
         publisher = form.cleaned_data.get("publisher")
         published_year = form.cleaned_data.get("published_year")
 
-        print(author_name)
-        print(publisher)
-        print(published_year)
-
         if author_name:
             books = books.filter(BookAuthor__icontains=author_name)
 
@@ -130,7 +126,7 @@ def create_book_flutter(request):
 def filter_books(request):
     author_name = request.GET.get('author_name', '')
     publisher = request.GET.get('publisher', '')
-    year_of_publication = request.GET.get('year', None)
+    year_of_publication = request.GET.get('published_year', None)
 
     books = Katalog.objects.all()
     if author_name:
@@ -138,10 +134,11 @@ def filter_books(request):
     if publisher:
         books = books.filter(Publisher__icontains=publisher)
     if year_of_publication:
-        books = books.filter(Year_Of_Publication=year_of_publication)
+        books = books.filter(
+            Year_Of_Publication=int(year_of_publication))
 
     books_json = serializers.serialize('json', books)
-    return JsonResponse(books_json, safe=False)
+    return HttpResponse(books_json, content_type="application/json")
 
 
 @csrf_exempt

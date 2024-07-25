@@ -20,7 +20,7 @@
                     <label for="id_publisher">Publisher:</label>
                     <input type="text" class="rounded-md border px-2 py-1" name="publisher" placeholder="Publisher" id="id_publisher">
                 </div>
-                <div class="mb-8">
+                <div class="mb-6">
                     <label for="id_published_year">Published year:</label>
                     <input type="number" class="rounded-md border px-2 py-1" name="published_year" placeholder="Year" id="id_published_year">
                  </div>
@@ -38,14 +38,25 @@
 <script src="/static/js/nav_script.js"></script>
 <script src="/static/js/modal_katalog.js"></script>
 <script>
+    const params = new URLSearchParams(window.location.search)
+    let isFilter = false;
+    if (params.get("author_name") || params.get("publisher") || params.get("published_year")) {
+        isFilter = true;
+    } else {
+        isFilter = false;
+    }
+
     async function getBooks() {
         return fetch("{% url 'products:get_book' %}").then((res) => res.json())
+    }
+    
+    async function getBooksFiltered() {
+        return fetch(`filter_books/?${params.toString()}`).then((res) => res.json())
     }
 
     async function refreshBooks() {
         document.getElementById("cards-board").innerHTML = ""
-        const books = await getBooks();
-        console.log(books)
+        const books = await (isFilter ? getBooksFiltered() : getBooks());
         let htmlString = ``
         books.forEach((el) => {
             htmlString += `\n<a href="book_detail/${el.pk}" class="max-w-md rounded overflow-hidden shadow-lg bg-white relative border hover:bg-gray-100 duration-100">

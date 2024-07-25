@@ -10,8 +10,10 @@ urlpatterns = [
     path('get_book/', get_book, name='get_book'),
     path('get_book/<int:id>/', get_book_by_id, name="get_book_by_id"),
     path('add_book/', add_book, name='add_book'),
-    path('add_to_cart/<int:book_id>/<int:user_id>/', add_to_cart, name='add_to_cart'),
+    path('add_to_cart/<int:book_id>/<int:user_id>/',
+         add_to_cart, name='add_to_cart'),
     path('create_book_flutter/', create_book_flutter, name='create_book_flutter'),
     path('filter_books/', filter_books, name='filter_books'),
-    path('add_to_cart_flutter/<int:book_id>/<int:user_id>/', add_to_cart_flutter, name='add_to_cart_flutter'),
+    path('add_to_cart_flutter/<int:book_id>/<int:user_id>/',
+         add_to_cart_flutter, name='add_to_cart_flutter'),
 ]
