@@ -7,29 +7,31 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="flex max-w-screen-2xl mx-auto mx-auto m-8 gap-8 px-8"> 
-    <aside class="flex-grow w-full max-w-xs">
-        <div class="flex flex-col align-center bg-[#f5f5f5] border max-w-xs rounded-lg p-4">
-            <p class="text-xl font-bold">Filter Books</p>
-            <form id="filterForm" class="pt-4 text-sm" method="GET" onsubmit="submitFilterForm()">
-                <div class="mb-4">
-                    <label for="id_author_name">Author name:</label>
-                    <input type="text" class="rounded-md border px-2 py-1" name="author_name" placeholder="Author Name" id="id_author_name">
-                </div>
-                <div class="mb-4">
-                    <label for="id_publisher">Publisher:</label>
-                    <input type="text" class="rounded-md border px-2 py-1" name="publisher" placeholder="Publisher" id="id_publisher">
-                </div>
-                <div class="mb-6">
-                    <label for="id_published_year">Published year:</label>
-                    <input type="number" class="rounded-md border px-2 py-1" name="published_year" placeholder="Year" id="id_published_year">
-                 </div>
-                <button type="submit" class="rounded-md bg-[#3992C6] hover-bg-[#247FB8] text-white font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline">Filter</button>
-            </form>            
-        </div>
-    </aside>
+<div class="min-h-screen">
+    <div class="flex min-h-screen max-w-screen-2xl mx-auto mx-auto m-8 gap-8 px-8"> 
+        <aside class="flex-grow w-full max-w-xs">
+            <div class="flex flex-col align-center bg-[#f5f5f5] border max-w-xs rounded-lg p-4">
+                <p class="text-xl font-bold">Filter Books</p>
+                <form id="filterForm" class="pt-4 text-sm" method="GET" onsubmit="submitFilterForm()">
+                    <div class="mb-4">
+                        <label for="id_author_name">Author name:</label>
+                        <input type="text" class="rounded-md border px-2 py-1" name="author_name" placeholder="Author Name" id="id_author_name">
+                    </div>
+                    <div class="mb-4">
+                        <label for="id_publisher">Publisher:</label>
+                        <input type="text" class="rounded-md border px-2 py-1" name="publisher" placeholder="Publisher" id="id_publisher">
+                    </div>
+                    <div class="mb-6">
+                        <label for="id_published_year">Published year:</label>
+                        <input type="number" class="rounded-md border px-2 py-1" name="published_year" placeholder="Year" id="id_published_year">
+                     </div>
+                    <button type="submit" class="rounded-md bg-[#3992C6] hover-bg-[#247FB8] text-white font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline">Filter</button>
+                </form>            
+            </div>
+        </aside>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 px-4 md:px-0" id="cards-board">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 px-4 md:px-0" id="cards-board">
+        </div>
     </div>
 </div>
 {% endblock content %}
@@ -58,24 +60,38 @@
         document.getElementById("cards-board").innerHTML = ""
         const books = await (isFilter ? getBooksFiltered() : getBooks());
         let htmlString = ``
-        books.forEach((el) => {
-            htmlString += `\n<a href="book_detail/${el.pk}" class="max-w-md rounded overflow-hidden shadow-lg bg-white relative border hover:bg-gray-100 duration-100">
-            <div class="relative">
-                <img width="150" height="200" class="w-full h-48 object-cover" src="${el.fields.Image}" alt="${el.fields.BookTitle}">
-            </div>
-            <div class="px-2 md:px-4 py-4">
-                <div class="md:text-sm text-[#005b9c] font-inter font-bold line-clamp-2">
-                    ${el.fields.BookTitle}
+        if (books.length != 0) {
+            books.forEach((el) => {
+                htmlString += `\n<a href="book_detail/${el.pk}" class="max-w-md rounded overflow-hidden shadow-lg bg-white relative border hover:bg-gray-100 duration-100">
+                <div class="relative">
+                    <img width="150" height="200" class="w-full h-48 object-cover" src="${el.fields.Image}" alt="${el.fields.BookTitle}">
                 </div>
-                <div class="text-sm md:text-gray-600 mb-4">
-                    by ${el.fields.BookAuthor}
+                <div class="px-2 md:px-4 py-4">
+                    <div class="md:text-sm text-[#005b9c] font-inter font-bold line-clamp-2">
+                        ${el.fields.BookTitle}
+                    </div>
+                    <div class="text-sm md:text-gray-600 mb-4">
+                        by ${el.fields.BookAuthor}
+                    </div>
+                    <div class="text-sm md:text-gray-600 mb-4">
+                        Published: ${el.fields.Year_Of_Publication}
+                    </div>
                 </div>
-                <div class="text-sm md:text-gray-600 mb-4">
-                    Published: ${el.fields.Year_Of_Publication}
-                </div>
-            </div>
-        </a>`
-        })
+            </a>`
+            })
+        } else {
+            document.getElementById("cards-board").classList.remove("grid","grid-cols-2","md:grid-cols-3","lg:grid-cols-4","xl:grid-cols-5","2xl:grid-cols-6","gap-4")
+            document.getElementById("cards-board").classList.add("flex-grow")
+            console.log("a")
+            htmlString += `\n<div class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="75" height="75" class="mx-auto">
+                <path d="M19 3C13.489 3 9 7.489 9 13c0 2.397.851 4.597 2.264 6.322l-7.971 7.971 1.414 1.414 7.97-7.97A9.947 9.947 0 0019 23c5.511 0 10-4.489 10-10S24.511 3 19 3zm0 2c4.43 0 8 3.57 8 8s-3.57 8-8 8-8-3.57-8-8 3.57-8 8-8zm-3 5a1 1 0 00-1 1 1 1 0 001 1 1 1 0 001-1 1 1 0 00-1-1zm6 0a1 1 0 00-1 1 1 1 0 001 1 1 1 0 001-1 1 1 0 00-1-1zm-3 4c-2.207 0-3.654 1.244-3.654 1.244a1 1 0 101.308 1.512S17.515 16 19 16s2.346.756 2.346.756a1 1 0 101.308-1.512S21.207 14 19 14z"
+                    fill="#9ca3af" style="line-height: normal; -webkit-text-indent: 0; text-indent: 0; -webkit-text-align: start; text-align: start; -webkit-text-decoration-line: none; text-decoration-line: none; -webkit-text-decoration-style: solid; text-decoration-style: solid; -webkit-text-decoration-color: #6b7280; text-decoration-color: #6b7280; -webkit-text-transform: none; text-transform: none; block-progression: tb; isolation: auto; mix-blend-mode: normal;"
+                    font-family="sans-serif" font-weight="400" overflow="visible"></path>
+            </svg>
+                <p class="text-gray-500 mt-4 text-center">The book you&#39;re looking for isn&#39;t yet available at Literasea.</p>
+            </div>`
+        }
 
         document.getElementById("cards-board").innerHTML = htmlString;
     }
