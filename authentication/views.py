@@ -50,7 +50,7 @@ def login_mobile(request):
                 "id": user.id,
                 "type": user.userprofile.user_type,
                 "status": True,
-                "message": "Login successful!"
+                "message": "Login successful"
             }, status=200)
         else:
             return JsonResponse({
